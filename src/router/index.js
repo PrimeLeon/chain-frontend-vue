@@ -91,7 +91,7 @@ export const asyncRoutes = [
     meta: {
       title: '用户管理',
       icon: 'peoples',
-      roles: ['admin']
+      roles: ['admin', 'editor']
     },
     children: [{
       path: '/commuser/create',
