@@ -35,7 +35,7 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -44,11 +44,18 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-
+    const errMsg = res.msg || '请求失败'
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+
+    /**
+     * * 此处定义的成功码是20000
+     * * 详情见后端./models/Result.js
+     */
+    // if (res.code !== 20000) {
+    if (res.code !== 2) {
       Message({
-        message: res.message || 'Error',
+        // message: res.message || 'Error',
+        message: errMsg,
         type: 'error',
         duration: 5 * 1000
       })
@@ -66,15 +73,21 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      // return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(errMsg))
     } else {
       return res
     }
   },
+  /**
+   * * 非200错误的处理方式
+   */
   error => {
     console.log('err' + error) // for debug
+    const { msg } = error.response.data
     Message({
-      message: error.message,
+      // message: error.message,
+      message: msg || '请求失败',
       type: 'error',
       duration: 5 * 1000
     })
